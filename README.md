@@ -6,7 +6,7 @@
 
 :fork_and_knife: Starter with Babel.js and Webpack
 
-this was originally a fork of (boilerplate-babel-webpack)[https://github.com/piecioshka/boilerplate-babel-webpack]
+this was originally a fork of https://github.com/piecioshka/boilerplate-babel-webpack
 
 ## Features
 
