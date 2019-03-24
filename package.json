@@ -1,0 +1,79 @@
+{
+    "name": "boilerplate-babel-webpack-glslify",
+    "version": "1.0.0",
+    "description": "Starter with Babel.js and Webpack, glslify, pug",
+    "license": "MIT",
+    "author": {
+        "name": "Nassos Yiannopoulos",
+        "email": "nassosyian@gmail.com",
+        "url": "https://nassosyian.net"
+    },
+    "scripts": {
+        "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+        "build": "node build/build.js",
+        "lint": "eslint --ext .js src",
+        "audit": "source-map-explorer dist/main.bundle.js",
+        "count": "find src -name '*.js' | xargs wc -l | sort -r",
+        "clear": "node node_modules/rimraf/bin.js dist/",
+        "clear:all": "node node_modules/rimraf/bin.js node_modules/ && npm run clear"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.3.4",
+        "@babel/preset-env": "^7.3.4",
+        "autoprefixer": "^9.5.0",
+        "babel-loader": "^8.0.5",
+        "chalk": "^2.4.2",
+        "copy-webpack-plugin": "^5.0.2",
+        "css-loader": "^2.1.1",
+        "exports-loader": "^0.7.0",
+        "file-loader": "^3.0.1",
+        "friendly-errors-webpack-plugin": "^1.7.0",
+        "glsl-easings": "^1.0.0",
+        "glsl-noise": "^0.0.0",
+        "glslify": "^7.0.0",
+        "glslify-hex": "^2.1.1",
+        "glslify-loader": "^2.0.0",
+        "html-loader": "^0.5.5",
+        "html-webpack-plugin": "^3.2.0",
+        "json-loader": "^0.5.7",
+        "node-notifier": "^5.4.0",
+        "optimize-css-assets-webpack-plugin": "^5.0.1",
+        "ora": "^3.2.0",
+        "portfinder": "^1.0.20",
+        "postcss-import": "^12.0.1",
+        "postcss-loader": "^3.0.0",
+        "pug": "^2.0.3",
+        "pug-plain-loader": "^1.0.0",
+        "raw-loader": "^2.0.0",
+        "rimraf": "^2.6.3",
+        "semver": "^5.6.0",
+        "shelljs": "^0.8.3",
+        "source-map-explorer": "^1.7.0",
+        "uglifyjs-webpack-plugin": "^2.1.2",
+        "webpack": "^4.29.6",
+        "webpack-bundle-analyzer": "^3.1.0",
+        "webpack-cli": "^3.2.3",
+        "webpack-dev-server": "^3.2.1",
+        "webpack-merge": "^4.2.1"
+    },
+    "keywords": [
+        "webpack",
+        "babel",
+        "starter",
+        "source map",
+        "explorer",
+        "count",
+        "loc",
+        "glslify",
+        "pug"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nassosyian/boilerplate-babel-webpack-glslify"
+    },
+    "dependencies": {},
+    "engines": {
+        "node": ">= 4.0.0",
+        "npm": ">= 3.0.0"
+    }
+}
