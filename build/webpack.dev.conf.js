@@ -13,21 +13,29 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
-const devWebpackConfig = merge(baseWebpackConfig, {
+const devWebpackConfig = merge(baseWebpackConfig, 
+{
 	mode: 'development',
-	module: {
+	module: 
+	{
 		rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
 	},
 	// cheap-module-eval-source-map is faster for development
 	devtool: config.dev.devtool,
 
 	// these devServer options should be customized in /config/index.js
-	devServer: {
+	devServer: 
+	{
 		clientLogLevel: 'warning',
-		historyApiFallback: {
+		historyApiFallback: 
+		{
 			rewrites: [
 				{ from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
 			],
+		},
+		headers: 
+		{
+			'Access-Control-Allow-Origin': '*'
 		},
 		hot: true,
 		contentBase: false, // since we use CopyWebpackPlugin.
@@ -42,19 +50,22 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 		proxy: config.dev.proxyTable,
 		// quiet: false, 
 		quiet: true, // necessary for FriendlyErrorsPlugin
-		watchOptions: {
+		watchOptions: 
+		{
 			poll: config.dev.poll,
 		}
 	},
 	plugins: [
-		new webpack.DefinePlugin({
+		new webpack.DefinePlugin(
+		{
 			'process.env': require('../config/dev.env')
 		}),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
 		new webpack.NoEmitOnErrorsPlugin(),
 		// https://github.com/ampedandwired/html-webpack-plugin
-		new HtmlWebpackPlugin({
+		new HtmlWebpackPlugin(
+		{
 			filename: 'index.html',
 			template: path.resolve(__dirname, '../index.html'),
 			inject: true
@@ -70,9 +81,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 	]
 })
 
-module.exports = new Promise((resolve, reject) => {
+module.exports = new Promise((resolve, reject) => 
+{
 	portfinder.basePort = process.env.PORT || config.dev.port
-	portfinder.getPort((err, port) => {
+	portfinder.getPort((err, port) => 
+	{
 		if (err) 
 		{
 			reject(err)
@@ -86,7 +99,8 @@ module.exports = new Promise((resolve, reject) => {
 
 			// Add FriendlyErrorsPlugin
 			devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
-				compilationSuccessInfo: {
+				compilationSuccessInfo: 
+				{
 					messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
 				},
 				onErrors: config.dev.notifyOnErrors
