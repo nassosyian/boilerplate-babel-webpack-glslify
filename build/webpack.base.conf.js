@@ -4,6 +4,8 @@ const utils = require('./utils')
 const config = require('../config')
 const webpack = require('webpack');
 const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 
 function resolve (dir) 
 {
@@ -70,10 +72,12 @@ module.exports =
 				include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
 			},
 			{
-				test: /\.s(a|c)ss$/,
+				test: /\.(sa|sc|c)ss$/,
 				use: [
-					"style-loader", // creates style nodes from JS strings
+					// fallback to style-loader in development
+					process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
 					"css-loader", // translates CSS into CommonJS
+					"postcss-loader", // translates CSS into CommonJS
 					"sass-loader" // compiles Sass to CSS, using Node Sass by default
 				]
 			},
