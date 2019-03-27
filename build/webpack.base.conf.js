@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const webpack = require('webpack');
+const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
 
 function resolve (dir) 
 {
@@ -51,6 +52,13 @@ module.exports =
 		// new webpack.ProvidePlugin({
 		// 	'THREE': 'three'
 		// }),
+		new SVGSpritemapPlugin('static/svg/**/*.svg'), 
+			{
+				output: {
+					filename: utils.assetsPath('svg/spritemap.svg')
+				}
+			}
+		)
 	],
 	module: 
 	{
@@ -60,6 +68,14 @@ module.exports =
 				test: /\.js$/,
 				loader: 'babel-loader',
 				include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+			},
+			{
+				test: /\.s(a|c)ss$/,
+				use: [
+					"style-loader", // creates style nodes from JS strings
+					"css-loader", // translates CSS into CommonJS
+					"sass-loader" // compiles Sass to CSS, using Node Sass by default
+				]
 			},
 			{
 				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
