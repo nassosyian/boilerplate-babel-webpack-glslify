@@ -72,16 +72,6 @@ module.exports =
 				include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
 			},
 			{
-				test: /\.(sa|sc|c)ss$/,
-				use: [
-					// fallback to style-loader in development
-					process.env.NODE_ENV !== 'production' ? 'style-loader' : MiniCssExtractPlugin.loader,
-					"css-loader", // translates CSS into CommonJS
-					"postcss-loader", // translates CSS into CommonJS
-					"sass-loader" // compiles Sass to CSS, using Node Sass by default
-				]
-			},
-			{
 				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
 				loader: 'url-loader',
 				options: 
