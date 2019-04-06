@@ -1,7 +1,7 @@
 'use strict'
 const path = require('path')
 const utils = require('./utils')
-const config = require('../config')
+const config = require('./config')
 const webpack = require('webpack');
 const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");

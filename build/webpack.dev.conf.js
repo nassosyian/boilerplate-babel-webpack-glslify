@@ -1,19 +1,20 @@
 'use strict'
-const utils = require('./utils')
-const webpack = require('webpack')
-const config = require('../config')
-const merge = require('webpack-merge')
-const path = require('path')
-const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
+const utils = require('./utils');
+const webpack = require('webpack');
+const config = require('./config');
+const merge = require('webpack-merge');
+const path = require('path');
+const baseWebpackConfig = require('./webpack.base.conf');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const portfinder = require('portfinder')
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+const portfinder = require('portfinder');
 
-const HOST = process.env.HOST
-const PORT = process.env.PORT && Number(process.env.PORT)
+
+const HOST = process.env.HOST;
+const PORT = process.env.PORT && Number(process.env.PORT);
+
+
 
 const devWebpackConfig = merge(baseWebpackConfig, 
 {
@@ -62,21 +63,14 @@ const devWebpackConfig = merge(baseWebpackConfig,
 	plugins: [
 		new webpack.DefinePlugin(
 		{
-			'process.env': require('../config/dev.env')
+			'process.env': require('./config/dev.env')
 		}),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
 		new webpack.NoEmitOnErrorsPlugin(),
-		// https://github.com/ampedandwired/html-webpack-plugin
-		new HtmlWebpackPlugin(
-		{
-			filename: 'index.html',
-			template: path.resolve(__dirname, '../pages/index.pug'),
-			// filetype: 'pug',
-			hash: true,
-			inject: true // inject hashed css/js files
-		}),
-		new HtmlWebpackPugPlugin(),
+	
+		...utils.scanForPages(path.resolve(__dirname, '../pages/'), ['pug', 'html'] ),
+
 		new MiniCssExtractPlugin(
 		{
 			// Options similar to the same options in webpackOptions.output
@@ -87,11 +81,6 @@ const devWebpackConfig = merge(baseWebpackConfig,
 		}),
 		// copy custom static assets
 		new CopyWebpackPlugin([
-			{
-				from: path.resolve(__dirname, '../static'),
-				to: config.dev.assetsSubDirectory + '/static',
-				ignore: ['.*']
-			},
 			{
 				from: path.resolve(__dirname, '../assets'),
 				to: config.dev.assetsSubDirectory + '/assets',

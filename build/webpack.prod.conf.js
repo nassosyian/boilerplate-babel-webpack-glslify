@@ -2,12 +2,10 @@
 const path = require('path')
 const utils = require('./utils')
 const webpack = require('webpack')
-const config = require('../config')
+const config = require('./config')
 const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
 const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin')
 // const PreloadWebpackPlugin = require('preload-webpack-plugin')
 // const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -15,7 +13,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 
-const env = require('../config/prod.env')
+const env = require('./config/prod.env')
 
 const html_options = {
 	// hash: true,
@@ -86,15 +84,9 @@ const webpackConfig = merge(baseWebpackConfig,
 		// generate dist index.html with correct asset hash for caching.
 		// you can customize output by editing /index.html
 		// see https://github.com/ampedandwired/html-webpack-plugin
-		new HtmlWebpackPlugin(
-		{
-			// filename: config.build.index,
-			filename: path.resolve(__dirname, '../dist/index.html'),
-			// template: 'index.html',
-			template: path.resolve(__dirname, '../pages/index.pug'),
-			...html_options
-		}),
-		new HtmlWebpackPugPlugin(),
+
+		...utils.scanForPages(path.resolve(__dirname, '../pages/'), ['pug', 'html'], html_options, (basename) =>  path.resolve(__dirname, `../dist/${basename}.html`) ),
+
 		// new PreloadWebpackPlugin(), // needs to be updated to suppert Webpack 4
 		// new InlineManifestWebpackPlugin(), 
 		// keep module.id stable when vendor modules does not change
@@ -105,7 +97,7 @@ const webpackConfig = merge(baseWebpackConfig,
 		// copy custom static assets
 		new CopyWebpackPlugin([
 			{
-				from: path.resolve(__dirname, '../static'),
+				from: path.resolve(__dirname, '../assets'),
 				to: config.build.assetsSubDirectory,
 				ignore: ['.*']
 			}

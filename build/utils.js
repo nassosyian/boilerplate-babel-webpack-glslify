@@ -1,8 +1,14 @@
 'use strict'
 const path = require('path')
-const config = require('../config')
+const config = require('./config')
 // const extract-text-webpack-plugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
 const packageConfig = require('../package.json')
+
+// const fs = require('fs');
+const glob = require('glob');
 
 exports.assetsPath = function (_path) {
 	const assetsSubDirectory = process.env.NODE_ENV === 'production'
@@ -10,6 +16,43 @@ exports.assetsPath = function (_path) {
 		: config.dev.assetsSubDirectory
 
 	return path.posix.join(assetsSubDirectory, _path)
+}
+
+
+
+exports.scanForPages = function(folderPath, extList, pluginOptions, filterFilenameFunc)
+{
+	var pluginList = [];
+	pluginOptions = pluginOptions || {};
+
+
+	for (var ext of extList)
+	{
+		console.log('glob search pattern: ', path.join(folderPath, '*.'+ext));
+		let matches = glob.sync(path.join(folderPath, '*.'+ext), {});//, function(error, matches )
+		{
+			// console.log('glob:', error, matches );
+			// console.log('glob matches:', matches );
+			for (var filename of matches )
+			{
+				console.log('glob found: ', filename);
+				const basename = path.basename(filename, '.'+ext);
+				pluginList.push( new HtmlWebpackPlugin(
+					{
+						hash: true,
+						inject: true, // inject hashed css/js files
+						...pluginOptions,
+						filename: filterFilenameFunc ? filterFilenameFunc(basename) : basename,
+						template: filename, //path.resolve(__dirname, '../pages/shop.pug'),
+					})
+				)
+			}
+		};
+	}
+
+	pluginList.push( new HtmlWebpackPugPlugin() );
+
+	return pluginList;
 }
 
 exports.cssLoaders = function (options) 
@@ -21,6 +64,7 @@ exports.cssLoaders = function (options)
 		loader: 'style-loader',
 		options: 
 		{
+			// url: false,
 			sourceMap: options.sourceMap
 		}
 	}
@@ -30,6 +74,7 @@ exports.cssLoaders = function (options)
 		loader: 'css-loader',
 		options: 
 		{
+			url: false,
 			sourceMap: options.sourceMap
 		}
 	}
@@ -46,10 +91,12 @@ exports.cssLoaders = function (options)
 	// generate loader string to be used with extract text plugin
 	function generateLoaders (loader, loaderOptions) 
 	{
-		const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader]
+		const loaders = options.usePostCSS ? [ styleLoader, MiniCssExtractPlugin.loader, cssLoader, postcssLoader] : [MiniCssExtractPlugin.loader, cssLoader]
 
+		// loaders.push(MiniCssExtractPlugin.loader);
 		if (loader) 
 		{
+
 			loaders.push({
 				loader: loader + '-loader',
 				options: Object.assign({}, loaderOptions, 
@@ -98,7 +145,8 @@ exports.styleLoaders = function (options)
 		output.push(
 		{
 			test: new RegExp('\\.' + extension + '$'),
-			use: loader
+			use: loader,
+			include: [ path.resolve('styles'), ]
 		})
 	}
 
