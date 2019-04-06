@@ -6,10 +6,6 @@ const webpack = require('webpack');
 const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-// const WebpackPugManifestPlugin = require('webpack-pug-manifest-plugin');
-// const pugManifest = new WebpackPugManifestPlugin();
-
-
 
 function resolve (dir) 
 {

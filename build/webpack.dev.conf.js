@@ -69,7 +69,7 @@ const devWebpackConfig = merge(baseWebpackConfig,
 		new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
 		new webpack.NoEmitOnErrorsPlugin(),
 	
-		...utils.scanForPages(path.resolve(__dirname, '../pages/'), ['pug', 'html'] ),
+		...utils.scanFolderForTemplates(path.resolve(__dirname, '../pages/'), ['pug', 'html'] ),
 
 		new MiniCssExtractPlugin(
 		{

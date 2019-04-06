@@ -81,11 +81,7 @@ const webpackConfig = merge(baseWebpackConfig,
 			// chunkFilename: "[id].css"
 		}),
 
-		// generate dist index.html with correct asset hash for caching.
-		// you can customize output by editing /index.html
-		// see https://github.com/ampedandwired/html-webpack-plugin
-
-		...utils.scanForPages(path.resolve(__dirname, '../pages/'), ['pug', 'html'], html_options, (basename) =>  path.resolve(__dirname, `../dist/${basename}.html`) ),
+		...utils.scanFolderForTemplates(path.resolve(__dirname, '../pages/'), ['pug', 'html'], html_options, (basename) =>  path.resolve(__dirname, '../dist/' + basename) ),
 
 		// new PreloadWebpackPlugin(), // needs to be updated to suppert Webpack 4
 		// new InlineManifestWebpackPlugin(), 

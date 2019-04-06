@@ -20,7 +20,7 @@ exports.assetsPath = function (_path) {
 
 
 
-exports.scanForPages = function(folderPath, extList, pluginOptions, filterFilenameFunc)
+exports.scanFolderForTemplates = function(folderPath, extList, pluginOptions, filterFilenameFunc)
 {
 	var pluginList = [];
 	pluginOptions = pluginOptions || {};
@@ -29,10 +29,8 @@ exports.scanForPages = function(folderPath, extList, pluginOptions, filterFilena
 	for (var ext of extList)
 	{
 		console.log('glob search pattern: ', path.join(folderPath, '*.'+ext));
-		let matches = glob.sync(path.join(folderPath, '*.'+ext), {});//, function(error, matches )
+		let matches = glob.sync(path.join(folderPath, '*.'+ext), {});
 		{
-			// console.log('glob:', error, matches );
-			// console.log('glob matches:', matches );
 			for (var filename of matches )
 			{
 				console.log('glob found: ', filename);
@@ -42,8 +40,8 @@ exports.scanForPages = function(folderPath, extList, pluginOptions, filterFilena
 						hash: true,
 						inject: true, // inject hashed css/js files
 						...pluginOptions,
-						filename: filterFilenameFunc ? filterFilenameFunc(basename) : basename,
-						template: filename, //path.resolve(__dirname, '../pages/shop.pug'),
+						filename: (filterFilenameFunc ? filterFilenameFunc(basename) : basename) + '.html',
+						template: filename, 
 					})
 				)
 			}
