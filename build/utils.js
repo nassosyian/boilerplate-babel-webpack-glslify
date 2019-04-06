@@ -43,7 +43,17 @@ exports.scanFolderForTemplates = function(folderPath, extList, pluginOptions, fi
 						filename: (filterFilenameFunc ? filterFilenameFunc(basename) : basename) + '.html',
 						template: filename, 
 					})
-				)
+				);
+				if (!filterFilenameFunc)
+					pluginList.push( new HtmlWebpackPlugin(
+						{
+							hash: true,
+							inject: true, // inject hashed css/js files
+							...pluginOptions,
+							filename: basename ,
+							template: filename, 
+						})
+					);
 			}
 		};
 	}
