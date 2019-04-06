@@ -6,7 +6,8 @@ const config = require('../config')
 const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
 const InlineManifestWebpackPlugin = require('inline-manifest-webpack-plugin')
 // const PreloadWebpackPlugin = require('preload-webpack-plugin')
 // const ExtractTextPlugin = require('extract-text-webpack-plugin')
@@ -15,6 +16,26 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 
 const env = require('../config/prod.env')
+
+const html_options = {
+	// hash: true,
+	inject: true, // inject hashed css/js files
+	minify: 
+	{
+		removeComments: true,
+		collapseWhitespace: false,
+		conservativeCollapse: true,
+		preserveLineBreaks: true,
+		useShortDoctype: true,
+		html5: true,
+		removeAttributeQuotes: true
+		// more options:
+		// https://github.com/kangax/html-minifier#options-quick-reference
+	},
+	mobile: true,
+	// necessary to consistently work with multiple chunks via CommonsChunkPlugin
+	chunksSortMode: 'dependency'
+};
 
 const webpackConfig = merge(baseWebpackConfig, 
 {
@@ -44,7 +65,6 @@ const webpackConfig = merge(baseWebpackConfig,
 			'process.env': env
 		}),
 
-
 		// extract css into its own file
 		// new ExtractTextPlugin({
 		// 	filename: utils.assetsPath('css/[name].[hash].css'),
@@ -59,6 +79,7 @@ const webpackConfig = merge(baseWebpackConfig,
 			// Options similar to the same options in webpackOptions.output
 			// both options are optional
 			filename: utils.assetsPath('css/[name].[hash].css'),
+			// filename: utils.assetsPath('css/styles.css'),
 			// chunkFilename: "[id].css"
 		}),
 
@@ -67,26 +88,13 @@ const webpackConfig = merge(baseWebpackConfig,
 		// see https://github.com/ampedandwired/html-webpack-plugin
 		new HtmlWebpackPlugin(
 		{
-			filename: config.build.index,
+			// filename: config.build.index,
+			filename: path.resolve(__dirname, '../dist/index.html'),
 			// template: 'index.html',
-			template: path.resolve(__dirname, '../index.html'),
-			inject: true,
-			minify: 
-			{
-				removeComments: true,
-				collapseWhitespace: false,
-				conservativeCollapse: true,
-				preserveLineBreaks: true,
-				useShortDoctype: true,
-				html5: true,
-				removeAttributeQuotes: true
-				// more options:
-				// https://github.com/kangax/html-minifier#options-quick-reference
-			},
-			mobile: true,
-			// necessary to consistently work with multiple chunks via CommonsChunkPlugin
-			chunksSortMode: 'dependency'
+			template: path.resolve(__dirname, '../pages/index.pug'),
+			...html_options
 		}),
+		new HtmlWebpackPugPlugin(),
 		// new PreloadWebpackPlugin(), // needs to be updated to suppert Webpack 4
 		// new InlineManifestWebpackPlugin(), 
 		// keep module.id stable when vendor modules does not change

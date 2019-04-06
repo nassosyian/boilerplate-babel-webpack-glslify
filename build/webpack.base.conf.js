@@ -6,6 +6,10 @@ const webpack = require('webpack');
 const SVGSpritemapPlugin = require('svg-spritemap-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+// const WebpackPugManifestPlugin = require('webpack-pug-manifest-plugin');
+// const pugManifest = new WebpackPugManifestPlugin();
+
+
 
 function resolve (dir) 
 {
@@ -35,32 +39,35 @@ module.exports =
 	output: 
 	{
 		path: config.build.destRoot,
-		filename: '[name].js',
+		filename: '[name].[hash:8].js',
 		publicPath: process.env.NODE_ENV === 'production'
 			? config.build.assetsPublicPath
 			: config.dev.assetsPublicPath
 	},
 	resolve: 
 	{
-		extensions: ['.js', '.vue', '.json'],
+		extensions: ['.js', '.vue', '.json', '.sass', '.scss'],
 		alias: 
 		{
 			'@': resolve('src'),
 			'views': path.resolve(__dirname, '../src/views'),
-			'shaders': path.resolve(__dirname, '../src/shaders')
+			// 'styles': path.resolve(__dirname, '../styles'),
+			'shaders': path.resolve(__dirname, '../src/shaders'),
+			'fonts': path.resolve(__dirname, '../assets/fonts')
 		}
 	},
 	plugins: [
 		// new webpack.ProvidePlugin({
 		// 	'THREE': 'three'
 		// }),
-		new SVGSpritemapPlugin('static/svg/**/*.svg'), 
+		new SVGSpritemapPlugin('media/svg/**/*.svg', 
 			{
 				output: {
 					filename: utils.assetsPath('svg/spritemap.svg')
 				}
 			}
-		)
+		),
+		// new WebpackPugManifestPlugin(),
 	],
 	module: 
 	{
@@ -118,7 +125,17 @@ module.exports =
 			},
 			{
 				test: /\.pug$/,
-				loader: 'pug-plain-loader'
+				// loader: 'pug-loader',
+				loader: ['html-loader?attrs=false', 'pug-html-loader'],
+				include: [ resolve('pages'), resolve('partials'), resolve('templates'), resolve('data'), ],
+				// options: {
+				// 	// attrs: false,
+				// 	exports: false,
+				// 	pretty: process.env.NODE_ENV === 'production' ? false : true,
+				// 	data: {
+
+				// 	}
+				// }
 			},
 			{
 				test: /\.html$/,

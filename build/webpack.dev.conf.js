@@ -6,7 +6,9 @@ const merge = require('webpack-merge')
 const path = require('path')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPugPlugin = require('html-webpack-pug-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
@@ -30,7 +32,7 @@ const devWebpackConfig = merge(baseWebpackConfig,
 		historyApiFallback: 
 		{
 			rewrites: [
-				{ from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
+				// { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
 			],
 		},
 		headers: 
@@ -38,7 +40,8 @@ const devWebpackConfig = merge(baseWebpackConfig,
 			'Access-Control-Allow-Origin': '*'
 		},
 		hot: true,
-		contentBase: false, // since we use CopyWebpackPlugin.
+		// if we disable it, misc files (media/scripts) will not be served
+		// contentBase: false, // since we use CopyWebpackPlugin.
 		compress: true,
 		host: HOST || config.dev.host,
 		port: PORT || config.dev.port,
@@ -47,6 +50,7 @@ const devWebpackConfig = merge(baseWebpackConfig,
 			? { warnings: false, errors: true }
 			: false,
 		publicPath: config.dev.assetsPublicPath,
+		// publicPath: '../', 
 		proxy: config.dev.proxyTable,
 		// quiet: false, 
 		quiet: true, // necessary for FriendlyErrorsPlugin
@@ -67,14 +71,35 @@ const devWebpackConfig = merge(baseWebpackConfig,
 		new HtmlWebpackPlugin(
 		{
 			filename: 'index.html',
-			template: path.resolve(__dirname, '../index.html'),
-			inject: true
+			template: path.resolve(__dirname, '../pages/index.pug'),
+			// filetype: 'pug',
+			hash: true,
+			inject: true // inject hashed css/js files
+		}),
+		new HtmlWebpackPugPlugin(),
+		new MiniCssExtractPlugin(
+		{
+			// Options similar to the same options in webpackOptions.output
+			// both options are optional
+			filename: utils.assetsPath('css/[name].[hash].css'),
+			// filename: utils.assetsPath('css/styles.css'),
+			// chunkFilename: "[id].css"
 		}),
 		// copy custom static assets
 		new CopyWebpackPlugin([
 			{
 				from: path.resolve(__dirname, '../static'),
-				to: config.dev.assetsSubDirectory,
+				to: config.dev.assetsSubDirectory + '/static',
+				ignore: ['.*']
+			},
+			{
+				from: path.resolve(__dirname, '../assets'),
+				to: config.dev.assetsSubDirectory + '/assets',
+				ignore: ['.*']
+			},
+			{
+				from: path.resolve(__dirname, '../media'),
+				to: config.dev.assetsSubDirectory + '/media',
 				ignore: ['.*']
 			}
 		])
